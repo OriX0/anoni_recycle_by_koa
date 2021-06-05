@@ -2,7 +2,7 @@
  * @Description: 失败信息的集合
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-05 18:02:23
+ * @LastEditTime: 2021-06-05 20:23:11
  */
 module.exports = {
   loginFailInfo: {
@@ -13,6 +13,14 @@ module.exports = {
   authFailInfo: {
     errCode: 10002,
     message: '登录信息无效 请重新登录',
+  },
+  registerUserFailInfo: {
+    errCode: 10003,
+    message: '注册失败',
+  },
+  registerUserIsExistInfo: {
+    errCode: 10004,
+    message: '用户名已存在',
   },
   // 超级管理员已存在 无法再次注册
   registerAdminIsExistInfo: {

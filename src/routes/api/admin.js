@@ -2,10 +2,10 @@
  * @Description:超级管理员相关api
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-04 16:52:52
+ * @LastEditTime: 2021-06-05 20:25:42
  */
 const router = require('koa-router')();
-const { initAdmin } = require('../../controller/admin');
+const { initAdmin, addUser } = require('../../controller/admin');
 router.prefix('/api/admin');
 router.post('/initAdmin', async (ctx, next) => {
   const { userName, realName, password, secret_key } = ctx.request.body;
@@ -13,5 +13,7 @@ router.post('/initAdmin', async (ctx, next) => {
   const result = await initAdmin(secret_key, { userName, realName, password });
   ctx.body = result;
 });
+// 添加用户
+router.post('/users', addUser);
 
 module.exports = router;

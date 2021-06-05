@@ -2,7 +2,7 @@
  * @Description: 超级管理员相关api的控制层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-04 17:06:56
+ * @LastEditTime: 2021-06-05 20:25:13
  */
 const { createUser, getUserInfo } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
@@ -12,6 +12,8 @@ const {
   registerAdminIsExistInfo,
   registerAdminFailInfo,
   registerAdminSecretKeyFailInfo,
+  registerUserIsExistInfo,
+  registerUserFailInfo,
 } = require('../model/ErrorInfo');
 /**
  * 用于系统重置后初次新增最高权限的管理员
@@ -50,4 +52,21 @@ async function initAdmin(secret_key, { userName, password, realName, role = 1 })
   }
 }
 
-module.exports = { initAdmin };
+async function addUser(ctx) {
+  const { userName, password, realName, city } = ctx.request.body;
+  // 调用service层
+  try {
+    await createUser({
+      userName,
+      password,
+      realName,
+      role: 2,
+      city,
+    });
+    return new SuccessModel();
+  } catch (error) {
+    console.log(error.messgae, error.stack);
+    return new ErrorModel(registerUserFailInfo);
+  }
+}
+module.exports = { initAdmin, addUser };
