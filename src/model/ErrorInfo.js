@@ -2,9 +2,18 @@
  * @Description: 失败信息的集合
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-04 16:55:27
+ * @LastEditTime: 2021-06-05 18:02:23
  */
 module.exports = {
+  loginFailInfo: {
+    errCode: 10001,
+    message: '登录错误 请检查您的用户名和密码',
+  },
+  // 鉴权失败
+  authFailInfo: {
+    errCode: 10002,
+    message: '登录信息无效 请重新登录',
+  },
   // 超级管理员已存在 无法再次注册
   registerAdminIsExistInfo: {
     errCode: 10010,
