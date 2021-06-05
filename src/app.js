@@ -2,7 +2,7 @@
  * @Description:
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-05 17:54:34
+ * @LastEditTime: 2021-06-05 21:36:48
  */
 const Koa = require('koa');
 const app = new Koa();
@@ -46,7 +46,7 @@ app.use(Exception);
 // token验证 及 无需验证的路由
 app.use(
   koaJwt({ secret: JWT_CONFIG.JWT_SECRET_KEY }).unless({
-    path: [/^\/user\/login/, /^\/user\/register/, /^\/user\/refreshtoken/],
+    path: [/^\/api\/auth\/login/, /^\/api\/user\/register/, /^\/auth\/refreshtoken/],
   })
 );
 
