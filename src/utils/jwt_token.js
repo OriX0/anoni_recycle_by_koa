@@ -2,21 +2,21 @@
  * @Description:jwt 相关操作
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-05 18:08:24
+ * @LastEditTime: 2021-06-06 14:26:07
  */
 const jwt = require('jsonwebtoken');
 const { JWT_CONFIG } = require('../conf/constant');
 /**
  *
- * @param {Number} userId  唯一的用户id
+ * @param {Number} userName  不重复的用户名
  * @param {String} serect 加密秘钥
  * @param {Number} time 过期时间
  * @returns
  */
-function addToken(userId, serect, time) {
+function addToken(uniqueInfo, serect, time) {
   const token = jwt.sign(
     {
-      userId,
+      uniqueInfo,
     },
     serect,
     { expiresIn: time + 's' }

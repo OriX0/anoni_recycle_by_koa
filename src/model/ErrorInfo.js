@@ -2,7 +2,7 @@
  * @Description: 失败信息的集合
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-05 21:49:41
+ * @LastEditTime: 2021-06-06 19:14:42
  */
 module.exports = {
   loginFailInfo: {
@@ -38,5 +38,21 @@ module.exports = {
   notAdminInof: {
     errCode: 10013,
     message: '当前无权限进行该操作',
+  },
+  passwordResetFailInfo: {
+    errCode: 10014,
+    message: '用户密码重置失败',
+  },
+  changeUserLockFalInfo: {
+    errCode: 10015,
+    message: '用户锁定状态调整失败',
+  },
+  userInfoGetFailInfo: {
+    errCode: 10020,
+    message: '用户详情获取失败',
+  },
+  paramsInvalidInfo: {
+    errCode: 10021,
+    message: '参数不合法 无法进行相关操作',
   },
 };

@@ -2,9 +2,9 @@
  * @Description: 超级管理员相关api的控制层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 14:00:38
+ * @LastEditTime: 2021-06-06 19:27:49
  */
-const { createUser, getUserInfo } = require('../service/user');
+const { createUser, getUserInfo, upadateUserInfo } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
 const { doCrypto } = require('../utils/crypto');
 const { INIT_ADMIN_SECRET_KEY, INIT_ADMIN_CONFIG } = require('../conf/constant');
@@ -14,6 +14,9 @@ const {
   registerAdminSecretKeyFailInfo,
   registerUserIsExistInfo,
   registerUserFailInfo,
+  paramsInvalidInfo,
+  passwordResetFailInfo,
+  changeUserLockFalInfo,
 } = require('../model/ErrorInfo');
 /**
  * 用于系统重置后初次新增最高权限的管理员
@@ -46,7 +49,11 @@ async function initAdmin(secret_key) {
     return new ErrorModel(registerAdminFailInfo);
   }
 }
-
+/**
+ * 增加用户-基于管理员
+ * @param {Object} ctx 上下文
+ * @returns
+ */
 async function addUser(ctx) {
   const { userName, password, realName, city } = ctx.request.body;
   // 调用service层
@@ -58,10 +65,42 @@ async function addUser(ctx) {
       role: 2,
       city,
     });
-    return new SuccessModel();
+    ctx.body = new SuccessModel();
   } catch (error) {
     console.log(error.messgae, error.stack);
-    return new ErrorModel(registerUserFailInfo);
+    ctx.body = new ErrorModel(registerUserFailInfo);
   }
 }
-module.exports = { initAdmin, addUser };
+/**
+ * 基于管理员 修改用户
+ * 完成重置密码 + 修改用户禁用状态
+ * @param {Object} ctx 上下文
+ */
+async function changeInfo(ctx) {
+  const { userName } = ctx.params;
+  const { type } = ctx.request.body;
+  if (!type) {
+    ctx.body = new ErrorModel(paramsInvalidInfo);
+  }
+  switch (type) {
+    case 'RES_PWD':
+      const result = await upadateUserInfo({ newPassword: doCrypto('888888') }, { userName });
+      if (!result) {
+        ctx.body = new ErrorModel(passwordResetFailInfo);
+      }
+      ctx.body = new SuccessModel({ newPassword: '888888' });
+      break;
+    case 'CHANGE_LOCK':
+      const { newLock } = ctx.request.body;
+      const result = await upadateUserInfo({ newLock }, { userName });
+      if (!result) {
+        ctx.body = new ErrorModel(changeUserLockFalInfo);
+      }
+      ctx.body = new SuccessModel();
+      break;
+    default:
+      ctx.body = new ErrorModel(passwordResetFailInfo);
+      break;
+  }
+}
+module.exports = { initAdmin, addUser, changeInfo };
