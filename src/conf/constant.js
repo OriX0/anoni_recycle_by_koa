@@ -2,7 +2,7 @@
  * @Description:常量
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-05 16:06:35
+ * @LastEditTime: 2021-06-06 14:00:18
  */
 module.exports = {
   INIT_ADMIN_SECRET_KEY: 'msb@B5X_ori',
@@ -12,5 +12,13 @@ module.exports = {
     JWT_REFRESH_SECRET_KEY: 'Qr{{(ZL3',
     JWT_TOKEN_LIFE: 60 * 60 * 24, // 24h
     JWT_REFRESH_TOKEN_LIFE: 60 * 60 * 24 * 2, //2day
+  },
+  // 初始化超级管理员的配置项
+  INIT_ADMIN_CONFIG: {
+    userName: '666',
+    password: '12345wszcx',
+    realName: '超级管理员',
+    role: 1,
+    city: 'noCity',
   },
 };

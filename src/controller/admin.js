@@ -2,12 +2,12 @@
  * @Description: 超级管理员相关api的控制层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-05 20:25:13
+ * @LastEditTime: 2021-06-06 14:00:38
  */
 const { createUser, getUserInfo } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
 const { doCrypto } = require('../utils/crypto');
-const { INIT_ADMIN_SECRET_KEY } = require('../conf/constant');
+const { INIT_ADMIN_SECRET_KEY, INIT_ADMIN_CONFIG } = require('../conf/constant');
 const {
   registerAdminIsExistInfo,
   registerAdminFailInfo,
@@ -24,7 +24,7 @@ const {
  * @param {Number}  role 权限 这里设置为 1
  *
  */
-async function initAdmin(secret_key, { userName, password, realName, role = 1 }) {
+async function initAdmin(secret_key) {
   // 1.先判断秘钥是否正确
   if (secret_key != INIT_ADMIN_SECRET_KEY) {
     return new ErrorModel(registerAdminSecretKeyFailInfo);
@@ -34,18 +34,13 @@ async function initAdmin(secret_key, { userName, password, realName, role = 1 })
   const userIfo = await getUserInfo({ role: 1 });
   if (userIfo) {
     //  2.1存在 返回错误
-    return new ErrorModel(registerAdminIsExistInfo);
+    ctx.body = new ErrorModel(registerAdminIsExistInfo);
+    return;
   }
   //  2.2如果不存在  尝试注册
   try {
-    const result = await createUser({
-      userName,
-      password: doCrypto(password),
-      realName,
-      role,
-      city: 'noCity',
-    });
-    return new SuccessModel(result);
+    const result = await createUser({ ...INIT_ADMIN_CONFIG, password: doCrypto(INIT_ADMIN_CONFIG.password) });
+    ctx.body = new SuccessModel(result);
   } catch (error) {
     console.log(error.messgae, error.stack);
     return new ErrorModel(registerAdminFailInfo);
