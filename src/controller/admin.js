@@ -2,7 +2,7 @@
  * @Description: 超级管理员相关api的控制层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 14:44:29
+ * @LastEditTime: 2021-06-06 15:07:40
  */
 const { createUser, getUserInfo } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
@@ -67,10 +67,10 @@ async function addUser(ctx) {
       role: 2,
       city,
     });
-    return new SuccessModel();
+    ctx.body = new SuccessModel();
   } catch (error) {
     console.log(error.messgae, error.stack);
-    return new ErrorModel(registerUserFailInfo);
+    ctx.body = new ErrorModel(registerUserFailInfo);
   }
 }
 module.exports = { initAdmin, addUser };
