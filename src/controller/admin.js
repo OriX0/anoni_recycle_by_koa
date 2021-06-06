@@ -2,7 +2,7 @@
  * @Description: 超级管理员相关api的控制层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 19:27:49
+ * @LastEditTime: 2021-06-06 21:12:29
  */
 const { createUser, getUserInfo, upadateUserInfo } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
@@ -37,13 +37,12 @@ async function initAdmin(secret_key) {
   const userIfo = await getUserInfo({ role: 1 });
   if (userIfo) {
     //  2.1存在 返回错误
-    ctx.body = new ErrorModel(registerAdminIsExistInfo);
-    return;
+    return new ErrorModel(registerAdminIsExistInfo);
   }
   //  2.2如果不存在  尝试注册
   try {
     const result = await createUser({ ...INIT_ADMIN_CONFIG, password: doCrypto(INIT_ADMIN_CONFIG.password) });
-    ctx.body = new SuccessModel(result);
+    return new SuccessModel(result);
   } catch (error) {
     console.log(error.messgae, error.stack);
     return new ErrorModel(registerAdminFailInfo);
@@ -84,16 +83,16 @@ async function changeInfo(ctx) {
   }
   switch (type) {
     case 'RES_PWD':
-      const result = await upadateUserInfo({ newPassword: doCrypto('888888') }, { userName });
-      if (!result) {
+      const resultResPwd = await upadateUserInfo({ newPassword: doCrypto('888888') }, { userName });
+      if (!resultResPwd) {
         ctx.body = new ErrorModel(passwordResetFailInfo);
       }
       ctx.body = new SuccessModel({ newPassword: '888888' });
       break;
     case 'CHANGE_LOCK':
       const { newLock } = ctx.request.body;
-      const result = await upadateUserInfo({ newLock }, { userName });
-      if (!result) {
+      const resultLock = await upadateUserInfo({ newLock }, { userName });
+      if (!resultLock) {
         ctx.body = new ErrorModel(changeUserLockFalInfo);
       }
       ctx.body = new SuccessModel();

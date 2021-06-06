@@ -2,7 +2,7 @@
  * @Description: 对user表操作的 服务层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 17:16:50
+ * @LastEditTime: 2021-06-06 21:29:10
  */
 const { User } = require('../db/model/index');
 /**
@@ -61,7 +61,7 @@ async function upadateUserInfo({ newPassword, newCity, newLock, newRealName, new
     updateObj.city = newCity;
   }
   if (newLock) {
-    updateObj.lock = newLock;
+    updateObj.is_locked = newLock;
   }
   if (newRealName) {
     updateObj.relaName = newRealName;
