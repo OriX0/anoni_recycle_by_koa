@@ -2,7 +2,7 @@
  * @Description: 失败信息的集合
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-05 21:49:41
+ * @LastEditTime: 2021-06-06 15:05:23
  */
 module.exports = {
   loginFailInfo: {
@@ -38,5 +38,9 @@ module.exports = {
   notAdminInof: {
     errCode: 10013,
     message: '当前无权限进行该操作',
+  },
+  userInfoGetFailInfo: {
+    errCode: 10020,
+    message: '用户详情获取失败',
   },
 };
