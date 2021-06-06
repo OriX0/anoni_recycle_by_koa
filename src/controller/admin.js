@@ -2,9 +2,9 @@
  * @Description: 超级管理员相关api的控制层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 15:07:40
+ * @LastEditTime: 2021-06-06 19:23:57
  */
-const { createUser, getUserInfo } = require('../service/user');
+const { createUser, getUserInfo, upadateUserInfo } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
 const { doCrypto } = require('../utils/crypto');
 const { INIT_ADMIN_SECRET_KEY } = require('../conf/constant');
@@ -14,6 +14,9 @@ const {
   registerAdminSecretKeyFailInfo,
   registerUserIsExistInfo,
   registerUserFailInfo,
+  paramsInvalidInfo,
+  passwordResetFailInfo,
+  changeUserLockFalInfo,
 } = require('../model/ErrorInfo');
 /**
  * 用于系统重置后初次新增最高权限的管理员
@@ -73,4 +76,36 @@ async function addUser(ctx) {
     ctx.body = new ErrorModel(registerUserFailInfo);
   }
 }
-module.exports = { initAdmin, addUser };
+/**
+ * 基于管理员 修改用户
+ * 完成重置密码 + 修改用户禁用状态
+ * @param {Object} ctx 上下文
+ */
+async function changeInfo(ctx) {
+  const { userName } = ctx.params;
+  const { type } = ctx.request.body;
+  if (!type) {
+    ctx.body = new ErrorModel(paramsInvalidInfo);
+  }
+  switch (type) {
+    case 'RES_PWD':
+      const result = await upadateUserInfo({ newPassword: doCrypto('888888') }, { userName });
+      if (!result) {
+        ctx.body = new ErrorModel(passwordResetFailInfo);
+      }
+      ctx.body = new SuccessModel({ newPassword: '888888' });
+      break;
+    case 'CHANGE_LOCK':
+      const { newLock } = ctx.request.body;
+      const result = await upadateUserInfo({ newLock }, { userName });
+      if (!result) {
+        ctx.body = new ErrorModel(changeUserLockFalInfo);
+      }
+      ctx.body = new SuccessModel();
+      break;
+    default:
+      ctx.body = new ErrorModel(passwordResetFailInfo);
+      break;
+  }
+}
+module.exports = { initAdmin, addUser, changeInfo };

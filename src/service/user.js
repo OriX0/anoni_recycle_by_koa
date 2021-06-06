@@ -2,7 +2,7 @@
  * @Description: 对user表操作的 服务层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-04 17:01:40
+ * @LastEditTime: 2021-06-06 17:16:50
  */
 const { User } = require('../db/model/index');
 /**
@@ -45,8 +45,45 @@ async function createUser({ userName, password, realName, role, city }) {
   const result = await User.create(createObj);
   return result.dataValues;
 }
+/**
+ * 数据库 更新某个用户
+ * @param {Object} param0 要修改的信息
+ * @param {Object} param1 原来的信息
+ * @returns
+ */
+async function upadateUserInfo({ newPassword, newCity, newLock, newRealName, newPicture }, { userName, password }) {
+  // 更新信息
+  const updateObj = {};
+  if (newPassword) {
+    updateObj.password = newPassword;
+  }
+  if (newCity) {
+    updateObj.city = newCity;
+  }
+  if (newLock) {
+    updateObj.lock = newLock;
+  }
+  if (newRealName) {
+    updateObj.relaName = newRealName;
+  }
+  if (newPicture) {
+    updateObj.picture = newPicture;
+  }
+  // where条件
+  const whereObj = {
+    userName,
+  };
+  if (password) {
+    whereObj.password = password;
+  }
+  const result = await User.update(updateObj, {
+    where: whereObj,
+  });
+  return result[0] > 0;
+}
 
 module.exports = {
   createUser,
   getUserInfo,
+  upadateUserInfo,
 };
