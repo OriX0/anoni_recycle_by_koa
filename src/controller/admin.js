@@ -2,7 +2,7 @@
  * @Description: 超级管理员相关api的控制层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-05 20:25:13
+ * @LastEditTime: 2021-06-06 14:44:29
  */
 const { createUser, getUserInfo } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
@@ -51,7 +51,11 @@ async function initAdmin(secret_key, { userName, password, realName, role = 1 })
     return new ErrorModel(registerAdminFailInfo);
   }
 }
-
+/**
+ * 增加用户-基于管理员
+ * @param {Object} ctx 上下文
+ * @returns
+ */
 async function addUser(ctx) {
   const { userName, password, realName, city } = ctx.request.body;
   // 调用service层
