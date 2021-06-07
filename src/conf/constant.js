@@ -2,7 +2,6 @@
  * @Description:常量
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 14:00:18
  */
 module.exports = {
   INIT_ADMIN_SECRET_KEY: 'msb@B5X_ori',
@@ -21,4 +20,5 @@ module.exports = {
     role: 1,
     city: 'noCity',
   },
+  USER_INIT_PASSWORD: 'ittest000',
 };
