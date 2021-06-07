@@ -57,7 +57,7 @@ async function addUser(ctx) {
   // 先判断该用户名是否存在了
   const userInfo = await getUserInfo({ userName });
   if (userInfo) {
-    return new ErrorModel(registerUserIsExistInfo);
+    ctx.body = new ErrorModel(registerUserIsExistInfo);
   }
   // 不存在 调用service层 创建用户
   try {
