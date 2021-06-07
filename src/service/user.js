@@ -2,7 +2,7 @@
  * @Description: 对user表操作的 服务层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 21:29:10
+ * @LastEditTime: 2021-06-07 16:45:01
  */
 const { User } = require('../db/model/index');
 /**
@@ -82,8 +82,25 @@ async function upadateUserInfo({ newPassword, newCity, newLock, newRealName, new
   return result[0] > 0;
 }
 
+async function queryAllUser({ pageIndex, pageSize, whereObj }) {
+  whereObj.role = 2;
+  const result = await User.findAndCountAll({
+    limit: pageSize,
+    offset: pageIndex * pageSize,
+    attributes: ['userName', 'password', 'avatar', 'realName', 'city', 'is_locked'],
+    where: whereObj,
+  });
+  const count = result.count;
+  const userList = result.rows.map(row => row.dataValues);
+  return {
+    count,
+    userList,
+  };
+}
+
 module.exports = {
   createUser,
   getUserInfo,
   upadateUserInfo,
+  queryAllUser,
 };

@@ -3,10 +3,10 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-const { createUser, getUserInfo, upadateUserInfo } = require('../service/user');
+const { createUser, getUserInfo, upadateUserInfo, queryAllUser } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
 const { doCrypto } = require('../utils/crypto');
-const { INIT_ADMIN_SECRET_KEY, INIT_ADMIN_CONFIG, USER_INIT_PASSWORD } = require('../conf/constant');
+const { INIT_ADMIN_SECRET_KEY, INIT_ADMIN_CONFIG, USER_INIT_PASSWORD, DEFALUT_PAGE_SIZE } = require('../conf/constant');
 const {
   registerAdminIsExistInfo,
   registerAdminFailInfo,
@@ -105,4 +105,17 @@ async function changeInfo(ctx) {
       break;
   }
 }
-module.exports = { initAdmin, addUser, changeInfo };
+/**
+ * 获取所有的用户列表
+ * @param {Object} ctx  上下文环境
+ */
+async function getUserList(ctx) {
+  let whereObj = {};
+  const { current, city, name } = ctx.query;
+  let pageIndex = current ? parseInt(current) : 0;
+  if (city) whereObj.city = city;
+  if (name) whereObj.name = name;
+  const result = await queryAllUser({ pageIndex, pageSize: DEFALUT_PAGE_SIZE, whereObj });
+  ctx.body = new SuccessModel(result);
+}
+module.exports = { initAdmin, addUser, changeInfo, getUserList };
