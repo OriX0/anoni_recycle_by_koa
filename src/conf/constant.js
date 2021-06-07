@@ -2,7 +2,7 @@
  * @Description:常量
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-05 16:06:35
+ * @LastEditTime: 2021-06-07 10:09:35
  */
 module.exports = {
   INIT_ADMIN_SECRET_KEY: 'msb@B5X_ori',
@@ -13,4 +13,5 @@ module.exports = {
     JWT_TOKEN_LIFE: 60 * 60 * 24, // 24h
     JWT_REFRESH_TOKEN_LIFE: 60 * 60 * 24 * 2, //2day
   },
+  USER_INIT_PASSWORD: 'ittest000',
 };

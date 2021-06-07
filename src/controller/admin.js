@@ -2,12 +2,11 @@
  * @Description: 超级管理员相关api的控制层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 19:23:57
  */
 const { createUser, getUserInfo, upadateUserInfo } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
 const { doCrypto } = require('../utils/crypto');
-const { INIT_ADMIN_SECRET_KEY } = require('../conf/constant');
+const { INIT_ADMIN_SECRET_KEY, USER_INIT_PASSWORD } = require('../conf/constant');
 const {
   registerAdminIsExistInfo,
   registerAdminFailInfo,
@@ -60,12 +59,17 @@ async function initAdmin(secret_key, { userName, password, realName, role = 1 })
  * @returns
  */
 async function addUser(ctx) {
-  const { userName, password, realName, city } = ctx.request.body;
-  // 调用service层
+  const { userName, realName, city } = ctx.request.body;
+  // 先判断该用户名是否存在了
+  const userInfo = await getUserInfo({ userName });
+  if (userInfo) {
+    return new ErrorModel(registerUserIsExistInfo);
+  }
+  // 不存在 调用service层 创建用户
   try {
     await createUser({
       userName,
-      password,
+      password: doCrypto(USER_INIT_PASSWORD),
       realName,
       role: 2,
       city,
@@ -82,20 +86,19 @@ async function addUser(ctx) {
  * @param {Object} ctx 上下文
  */
 async function changeInfo(ctx) {
-  const { userName } = ctx.params;
-  const { type } = ctx.request.body;
+  const { userName, type } = ctx.params;
   if (!type) {
     ctx.body = new ErrorModel(paramsInvalidInfo);
   }
   switch (type) {
-    case 'RES_PWD':
-      const result = await upadateUserInfo({ newPassword: doCrypto('888888') }, { userName });
+    case 'resetPwd':
+      const result = await upadateUserInfo({ newPassword: doCrypto(USER_INIT_PASSWORD) }, { userName });
       if (!result) {
         ctx.body = new ErrorModel(passwordResetFailInfo);
       }
-      ctx.body = new SuccessModel({ newPassword: '888888' });
+      ctx.body = new SuccessModel({ newPassword: USER_INIT_PASSWORD });
       break;
-    case 'CHANGE_LOCK':
+    case 'lock':
       const { newLock } = ctx.request.body;
       const result = await upadateUserInfo({ newLock }, { userName });
       if (!result) {
@@ -104,7 +107,7 @@ async function changeInfo(ctx) {
       ctx.body = new SuccessModel();
       break;
     default:
-      ctx.body = new ErrorModel(passwordResetFailInfo);
+      ctx.body = new ErrorModel(paramsInvalidInfo);
       break;
   }
 }

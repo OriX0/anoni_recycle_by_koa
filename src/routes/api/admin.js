@@ -2,7 +2,7 @@
  * @Description:超级管理员相关api
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 19:17:11
+ * @LastEditTime: 2021-06-07 10:13:50
  */
 const router = require('koa-router')();
 const { initAdmin, addUser, changeInfo } = require('../../controller/admin');
@@ -19,8 +19,6 @@ router.post('/initAdmin', async (ctx, next) => {
 router.post('/users', checkIsAdmin, addUser);
 // 获取用户详情
 router.get('/users/:userName', checkIsAdmin, getInfoByUserName);
-// 用户的禁用和启用
-router.patch('/users/:userName/lock', checkIsAdmin, changeInfo);
-// 用户重置密码
-router.patch('/users/:userName/resetPwd', checkIsAdmin, changeInfo);
+// 用户的禁用和启用 和重置密码
+router.patch('/users/:userName/:type', checkIsAdmin, changeInfo);
 module.exports = router;
