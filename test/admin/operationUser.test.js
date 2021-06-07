@@ -15,18 +15,23 @@ const city = '杭州';
 test('新建一个用户 应该成功 ', async () => {
   const result = await server
     .post('/api/admin/users')
-    .send({ userName, password, realName, city })
+    .send({ userName, realName, city })
     .set('Authorization', admin_jwt_token);
 
   expect(result.body.errCode).toBe(0);
 });
+// 再次新建该用户 应该失败
+test('再次新建该用户 应该失败 ', async () => {
+  const result = await server
+    .post('/api/admin/users')
+    .send({ userName, realName, city })
+    .set('Authorization', admin_jwt_token);
+
+  expect(result.body.errCode).not.toBe(0);
+});
 // 重置这个用户的初始密码
 test('重置这个用户 应该重置成功 ', async () => {
-  const result = await server
-    .patch(`/api/admin/users/${userName}/resetPwd`)
-    .send({ type: 'RES_PWD' })
-    .set('Authorization', admin_jwt_token);
-  console.log(result);
+  const result = await server.patch(`/api/admin/users/${userName}/resetPwd`).set('Authorization', admin_jwt_token);
   expect(result.body.errCode).toBe(0);
 });
 
@@ -34,7 +39,7 @@ test('重置这个用户 应该重置成功 ', async () => {
 test('修改这个用户的锁定状态 应该重置成功 ', async () => {
   const result = await server
     .patch(`/api/admin/users/${userName}/lock`)
-    .send({ type: 'CHANGE_LOCK', newLock: 1 })
+    .send({ newLock: 1 })
     .set('Authorization', admin_jwt_token);
 
   expect(result.body.errCode).toBe(0);
@@ -43,5 +48,5 @@ test('修改这个用户的锁定状态 应该重置成功 ', async () => {
 test('获得这个用户的详情 ', async () => {
   const result = await server.get(`/api/admin/users/${userName}`).set('Authorization', admin_jwt_token);
   expect(result.body.errCode).toBe(0);
-  expect(result.body.data.is_locked).toBe(1);
+  expect(result.body.data.is_locked).toBe('1');
 });

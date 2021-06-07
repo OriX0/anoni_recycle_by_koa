@@ -6,7 +6,7 @@
 
 const server = require('../server');
 const { INIT_ADMIN_SECRET_KEY } = require('../testUserConf');
-const { HAVE_INIT_ADMIN } = require('../server');
+const { HAVE_INIT_ADMIN } = require('../testUserConf');
 // 测试初始化管理员 不带秘钥应该失败
 test('测试初始化管理员 不带秘钥应该失败 ', async () => {
   const result = await server.post('/api/admin/initAdmin');
