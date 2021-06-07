@@ -2,7 +2,6 @@
  * @Description: 当前登录用户权限
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 14:28:09
  */
 const { ErrorModel } = require('../model/BaseModel');
 const { notAdminInof } = require('../model/ErrorInfo');
@@ -15,10 +14,11 @@ const { INIT_ADMIN_CONFIG } = require('../conf/constant');
 async function checkIsAdmin(ctx, next) {
   const token = ctx.header.authorization;
   const payload = token.split(' ')[1];
-  const userName = decodeToken(payload);
-  if (userName !== INIT_ADMIN_CONFIG.uniqueInfo) {
+  const userName = decodeToken(payload).uniqueInfo;
+  if (userName !== INIT_ADMIN_CONFIG.userName) {
     ctx.status = 403;
     ctx.body = new ErrorModel(notAdminInof);
+    return;
   }
   await next();
 }
