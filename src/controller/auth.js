@@ -2,7 +2,6 @@
  * @Description:用户认证控制层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 14:26:42
  */
 const { ErrorModel, SuccessModel } = require('../model/BaseModel');
 const { loginFailInfo } = require('../model/ErrorInfo');
@@ -11,12 +10,13 @@ const { doCrypto } = require('../utils/crypto');
 const { addToken } = require('../utils/jwt_token');
 const { JWT_CONFIG } = require('../conf/constant');
 
-async function login(ctx) {
+async function login (ctx) {
   const { userName, password } = ctx.request.body;
   const result = await getUserInfo({ userName, password: doCrypto(password) });
   // 查询不存在 报错
   if (!result) {
-    return new ErrorModel(loginFailInfo);
+    ctx.status = 422;
+    ctx.body = new ErrorModel(loginFailInfo);
   }
   // 查询存在
   // 1.获取jwt 设置jwt
