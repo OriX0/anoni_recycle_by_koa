@@ -57,6 +57,7 @@ async function addUser (ctx) {
   // 先判断该用户名是否存在了
   const userInfo = await getUserInfo({ userName });
   if (userInfo) {
+    ctx.status = 422;
     ctx.body = new ErrorModel(registerUserIsExistInfo);
   }
   // 不存在 调用service层 创建用户
@@ -71,6 +72,7 @@ async function addUser (ctx) {
     ctx.body = new SuccessModel();
   } catch (error) {
     console.log(error.message, error.stack);
+    ctx.status = 501;
     ctx.body = new ErrorModel(registerUserFailInfo);
   }
 }
@@ -82,12 +84,14 @@ async function addUser (ctx) {
 async function changeInfo (ctx) {
   const { userName, type } = ctx.params;
   if (!type) {
+    ctx.status = 422;
     ctx.body = new ErrorModel(paramsInvalidInfo);
   }
   switch (type) {
     case 'resetPwd':
       const result = await updateUserInfo({ newPassword: doCrypto(USER_INIT_PASSWORD) }, { userName });
       if (!result) {
+        ctx.status = 422;
         ctx.body = new ErrorModel(passwordResetFailInfo);
       }
       ctx.body = new SuccessModel({ newPassword: USER_INIT_PASSWORD });
@@ -96,11 +100,13 @@ async function changeInfo (ctx) {
       const { newLock } = ctx.request.body;
       const resultLock = await updateUserInfo({ newLock }, { userName });
       if (!resultLock) {
+        ctx.status = 422;
         ctx.body = new ErrorModel(changeUserLockFalInfo);
       }
       ctx.body = new SuccessModel();
       break;
     default:
+      ctx.status = 422;
       ctx.body = new ErrorModel(paramsInvalidInfo);
       break;
   }
