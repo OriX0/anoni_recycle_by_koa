@@ -3,10 +3,10 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-const { createUser, getUserInfo, upadateUserInfo, queryAllUser } = require('../service/user');
+const { createUser, getUserInfo, updateUserInfo, queryAllUser } = require('../service/user');
 const { SuccessModel, ErrorModel } = require('../model/BaseModel');
 const { doCrypto } = require('../utils/crypto');
-const { INIT_ADMIN_SECRET_KEY, INIT_ADMIN_CONFIG, USER_INIT_PASSWORD, DEFALUT_PAGE_SIZE } = require('../conf/constant');
+const { INIT_ADMIN_SECRET_KEY, INIT_ADMIN_CONFIG, USER_INIT_PASSWORD, DEFAULT_PAGE_SIZE } = require('../conf/constant');
 const {
   registerAdminIsExistInfo,
   registerAdminFailInfo,
@@ -26,7 +26,7 @@ const {
  * @param {Number}  role 权限 这里设置为 1
  *
  */
-async function initAdmin(secret_key) {
+async function initAdmin (secret_key) {
   // 1.先判断秘钥是否正确
   if (secret_key != INIT_ADMIN_SECRET_KEY) {
     return new ErrorModel(registerAdminSecretKeyFailInfo);
@@ -43,7 +43,7 @@ async function initAdmin(secret_key) {
     const result = await createUser({ ...INIT_ADMIN_CONFIG, password: doCrypto(INIT_ADMIN_CONFIG.password) });
     return new SuccessModel(result);
   } catch (error) {
-    console.log(error.messgae, error.stack);
+    console.log(error.message, error.stack);
     return new ErrorModel(registerAdminFailInfo);
   }
 }
@@ -52,7 +52,7 @@ async function initAdmin(secret_key) {
  * @param {Object} ctx 上下文
  * @returns
  */
-async function addUser(ctx) {
+async function addUser (ctx) {
   const { userName, realName, city } = ctx.request.body;
   // 先判断该用户名是否存在了
   const userInfo = await getUserInfo({ userName });
@@ -70,7 +70,7 @@ async function addUser(ctx) {
     });
     ctx.body = new SuccessModel();
   } catch (error) {
-    console.log(error.messgae, error.stack);
+    console.log(error.message, error.stack);
     ctx.body = new ErrorModel(registerUserFailInfo);
   }
 }
@@ -79,14 +79,14 @@ async function addUser(ctx) {
  * 完成重置密码 + 修改用户禁用状态
  * @param {Object} ctx 上下文
  */
-async function changeInfo(ctx) {
+async function changeInfo (ctx) {
   const { userName, type } = ctx.params;
   if (!type) {
     ctx.body = new ErrorModel(paramsInvalidInfo);
   }
   switch (type) {
     case 'resetPwd':
-      const result = await upadateUserInfo({ newPassword: doCrypto(USER_INIT_PASSWORD) }, { userName });
+      const result = await updateUserInfo({ newPassword: doCrypto(USER_INIT_PASSWORD) }, { userName });
       if (!result) {
         ctx.body = new ErrorModel(passwordResetFailInfo);
       }
@@ -94,7 +94,7 @@ async function changeInfo(ctx) {
       break;
     case 'lock':
       const { newLock } = ctx.request.body;
-      const resultLock = await upadateUserInfo({ newLock }, { userName });
+      const resultLock = await updateUserInfo({ newLock }, { userName });
       if (!resultLock) {
         ctx.body = new ErrorModel(changeUserLockFalInfo);
       }
@@ -109,13 +109,13 @@ async function changeInfo(ctx) {
  * 获取所有的用户列表
  * @param {Object} ctx  上下文环境
  */
-async function getUserList(ctx) {
+async function getUserList (ctx) {
   let whereObj = {};
   const { current, city, name } = ctx.query;
   let pageIndex = current ? parseInt(current) : 0;
   if (city) whereObj.city = city;
   if (name) whereObj.name = name;
-  const result = await queryAllUser({ pageIndex, pageSize: DEFALUT_PAGE_SIZE, whereObj });
+  const result = await queryAllUser({ pageIndex, pageSize: DEFAULT_PAGE_SIZE, whereObj });
   ctx.body = new SuccessModel(result);
 }
 module.exports = { initAdmin, addUser, changeInfo, getUserList };

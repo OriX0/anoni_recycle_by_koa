@@ -28,5 +28,5 @@ module.exports = {
     city: 'noCity',
   },
   USER_INIT_PASSWORD: 'ittest000',
-  DEFALUT_PAGE_SIZE: 10,
+  DEFAULT_PAGE_SIZE: 10,
 };
