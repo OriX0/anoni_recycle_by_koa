@@ -2,7 +2,7 @@
  * @Description: 失败信息的集合
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-09 13:42:53
+ * @LastEditTime: 2021-06-10 00:18:10
  */
 module.exports = {
   loginFailInfo: {
@@ -55,4 +55,8 @@ module.exports = {
     errCode: 10021,
     message: '参数不合法 无法进行相关操作',
   },
+  authTokenUnableValidInfo: {
+    errCode: 10022,
+    message: 'token unable valid'
+  }
 };
