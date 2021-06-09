@@ -4,7 +4,7 @@
  * @LastEditors: OriX
  */
 const { ErrorModel } = require('../model/BaseModel');
-const { notAdminInof } = require('../model/ErrorInfo');
+const { notAdminInfo } = require('../model/ErrorInfo');
 const { decodeToken } = require('../utils/jwt_token');
 const { INIT_ADMIN_CONFIG } = require('../conf/constant');
 /**
@@ -17,7 +17,7 @@ async function checkIsAdmin(ctx, next) {
   const userName = decodeToken(payload).uniqueInfo;
   if (userName !== INIT_ADMIN_CONFIG.userName) {
     ctx.status = 403;
-    ctx.body = new ErrorModel(notAdminInof);
+    ctx.body = new ErrorModel(notAdminInfo);
     return;
   }
   await next();

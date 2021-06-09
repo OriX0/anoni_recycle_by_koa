@@ -2,7 +2,7 @@
  * @Description: 失败信息的集合
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-06 19:14:42
+ * @LastEditTime: 2021-06-09 13:42:53
  */
 module.exports = {
   loginFailInfo: {
@@ -35,7 +35,7 @@ module.exports = {
     errCode: 10012,
     message: '秘钥验证失败 无法注册超级管理员',
   },
-  notAdminInof: {
+  notAdminInfo: {
     errCode: 10013,
     message: '当前无权限进行该操作',
   },
