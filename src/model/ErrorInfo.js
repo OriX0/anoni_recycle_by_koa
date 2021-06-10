@@ -2,7 +2,7 @@
  * @Description: 失败信息的集合
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-10 00:18:10
+ * @LastEditTime: 2021-06-10 15:43:54
  */
 module.exports = {
   loginFailInfo: {
@@ -55,8 +55,24 @@ module.exports = {
     errCode: 10021,
     message: '参数不合法 无法进行相关操作',
   },
+  // acc or ref token 验证失败
   authTokenUnableValidInfo: {
     errCode: 10022,
-    message: 'token unable valid'
-  }
+    message: 'acc 或 ref token无法验证',
+  },
+  // token在黑名单中 需要重新登录
+  authTokenOverdueInfo: {
+    errCode: 10023,
+    message: '这个token已经被注销了请重新登录',
+  },
+  // ref_token验证失败
+  authTokeRefUnableValidInfo: {
+    errCode: 10024,
+    message: 'ref_token无法验证 请重新登录',
+  },
+  // acc_token 验证失败
+  authTokeAccUnableValidInfo: {
+    errCode: 10025,
+    message: 'acc_token无法验证 请重新登录',
+  },
 };

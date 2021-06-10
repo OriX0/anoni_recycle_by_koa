@@ -2,7 +2,7 @@
  * @Description:jwt 相关操作
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-09 13:47:12
+ * @LastEditTime: 2021-06-10 11:14:41
  */
 const jwt = require('jsonwebtoken');
 const { JWT_CONFIG } = require('../conf/constant');
@@ -53,9 +53,20 @@ function verify_Token(token, type) {
       break;
   }
 }
+/**
+ * 从token中解码出内容
+ * @param {String} token
+ * @param {Boolean} isHeader  是不是在头部 在头部就要 分割文本
+ * @returns
+ */
+function getContentFromToken(token, isHeader = false) {
+  let payload = isHeader ? token.split(' ')[1] : token;
+  return decodeToken(payload);
+}
 
 module.exports = {
   addToken,
   decodeToken,
   verify_Token,
+  getContentFromToken,
 };

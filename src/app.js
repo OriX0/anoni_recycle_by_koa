@@ -1,8 +1,7 @@
 /*
- * @Description:
+ * @Description: app.js
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-10 00:10:00
  */
 const Koa = require('koa');
 const app = new Koa();
@@ -11,19 +10,14 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
-// 路由限制
-const koaJwt = require('koa-jwt');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
 // 引入api 路由
 const adminApiRouter = require('./routes/api/admin');
 const authApiRouter = require('./routes/api/auth');
-// 引入常量
-const { JWT_CONFIG } = require('./conf/constant');
-// 引入全局异常捕捉中间件
-const Exception = require('./middleware/Exception');
-
+// 引入全局token验证中间件
+const ValidateTokenMiddle = require('./middleware/validateToken');
 // error handler
 onerror(app);
 
@@ -42,14 +36,17 @@ app.use(
     extension: 'ejs',
   })
 );
+/* 
+koaJwt 中间件
 app.use(Exception);
 // token验证 及 无需验证的路由
 app.use(
   koaJwt({ secret: JWT_CONFIG.JWT_SECRET_KEY }).unless({
     path: [/^\/api\/auth\/login/, /^\/api\/admin\/initAdmin/, /^\/api\/user\/register/, /^\/auth\/refreshToken/],
   })
-);
-
+); */
+// 自写验证中间件
+app.use(ValidateTokenMiddle);
 // logger
 app.use(async (ctx, next) => {
   const start = new Date();

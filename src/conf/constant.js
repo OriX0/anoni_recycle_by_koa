@@ -29,4 +29,6 @@ module.exports = {
   },
   USER_INIT_PASSWORD: 'ittest000',
   DEFAULT_PAGE_SIZE: 10,
+  noTokenValidUrlList: ['/api/auth/login', '/api/admin/initAdmin'],
+  justRefTokenValidUrlList: ['/api/auth/refreshToken'],
 };
