@@ -25,7 +25,6 @@ async function ValidateToken(ctx, next) {
   }
   // 修改acc_token
   acc_token = acc_token.split(' ')[1];
-  console.log('acc_token: ', acc_token);
   // 3.从redis中取 相关键 判断是否在黑名单中
   const refInBlackList = await get(ref_token);
   const accInBlackList = await get(acc_token);
@@ -50,7 +49,6 @@ async function ValidateToken(ctx, next) {
     return;
   }
   // 4.2 如果 验证不通过
-  console.log('(ref_verify && acc_verify): ', ref_verify, acc_verify);
   if (!(ref_verify && acc_verify)) {
     ctx.status = 401;
     ctx.body = new ErrorModel(authTokenUnableValidInfo);
