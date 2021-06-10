@@ -26,7 +26,7 @@ const {
  * @param {Number}  role 权限 这里设置为 1
  *
  */
-async function initAdmin (secret_key) {
+async function initAdmin(secret_key) {
   // 1.先判断秘钥是否正确
   if (secret_key != INIT_ADMIN_SECRET_KEY) {
     return new ErrorModel(registerAdminSecretKeyFailInfo);
@@ -52,7 +52,7 @@ async function initAdmin (secret_key) {
  * @param {Object} ctx 上下文
  * @returns
  */
-async function addUser (ctx) {
+async function addUser(ctx) {
   const { userName, realName, city } = ctx.request.body;
   // 先判断该用户名是否存在了
   const userInfo = await getUserInfo({ userName });
@@ -81,7 +81,7 @@ async function addUser (ctx) {
  * 完成重置密码 + 修改用户禁用状态
  * @param {Object} ctx 上下文
  */
-async function changeInfo (ctx) {
+async function changeInfo(ctx) {
   const { userName, type } = ctx.params;
   if (!type) {
     ctx.status = 422;
@@ -97,8 +97,14 @@ async function changeInfo (ctx) {
       ctx.body = new SuccessModel({ newPassword: USER_INIT_PASSWORD });
       break;
     case 'lock':
-      const { newLock } = ctx.request.body;
-      const resultLock = await updateUserInfo({ newLock }, { userName });
+      let { newLock } = ctx.request.body;
+      newLock = +newLock;
+      // 如果不是数字类型则报错
+      if (typeof newLock != 'number') {
+        ctx.status = 422;
+        ctx.body = new ErrorModel(paramsInvalidInfo);
+      }
+      const resultLock = await updateUserInfo({ newLock: +newLock }, { userName });
       if (!resultLock) {
         ctx.status = 422;
         ctx.body = new ErrorModel(changeUserLockFalInfo);
@@ -115,7 +121,7 @@ async function changeInfo (ctx) {
  * 获取所有的用户列表
  * @param {Object} ctx  上下文环境
  */
-async function getUserList (ctx) {
+async function getUserList(ctx) {
   let whereObj = {};
   const { current, city, name } = ctx.query;
   let pageIndex = current ? parseInt(current) : 0;
