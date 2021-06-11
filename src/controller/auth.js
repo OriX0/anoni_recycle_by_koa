@@ -75,6 +75,7 @@ async function loginOut(ctx, next) {
   const ref_obj = getContentFromToken(ref_token);
   const acc_obj = getContentFromToken(acc_token, true);
   // 3.在redis中设置
+  const now = Math.ceil(Date.now() / 1000);
   try {
     set(acc_token, acc_obj.uniqueInfo, acc_obj.exp - now);
     set(ref_token, ref_obj.uniqueInfo, ref_obj.exp - now);
