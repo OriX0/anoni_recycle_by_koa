@@ -128,11 +128,15 @@ async function changeInfo(ctx) {
  */
 async function getUserList(ctx) {
   let whereObj = {};
-  const { current, city, name } = ctx.query;
-  let pageIndex = current ? parseInt(current) : 0;
+
+  const { current, city, userName } = ctx.query;
+  let pageIndex = current ? parseInt(current) - 1 : 0;
   if (city) whereObj.city = city;
-  if (name) whereObj.name = name;
+  if (userName) whereObj.name = userName;
   const result = await queryAllUser({ pageIndex, pageSize: DEFAULT_PAGE_SIZE, whereObj });
+  console.log('whereObj: ', whereObj);
+  console.log('result: ', result);
+  console.log();
   ctx.body = new SuccessModel(result);
 }
 module.exports = { initAdmin, addUser, changeInfo, getUserList };
