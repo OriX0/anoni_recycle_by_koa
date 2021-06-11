@@ -37,5 +37,5 @@ module.exports = {
   noTokenValidUrlList: ['/api/auth/login', '/api/admin/initAdmin'],
   justRefTokenValidUrlList: ['/api/auth/refreshToken'],
   // 数据格式化
-  DEFAULT_AVATAR_URL = 'https://i.loli.net/2021/06/11/DyfHjY3uBUdPrv1.jpg"'
+  DEFAULT_AVATAR_URL: 'https://i.loli.net/2021/06/11/DyfHjY3uBUdPrv1.jpg"',
 };
