@@ -2,14 +2,15 @@
  * @Description: 对user表操作的 服务层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-08 23:22:41
+ * @LastEditTime: 2021-06-11 14:28:27
  */
 const { User } = require('../db/model/index');
+const { formateUser } = require('./_formate');
 /**
  * 获取用户信息 根据指定条件
  * @param {Object} param0  用于查询的参数
  */
-async function getUserInfo ({ userName, password, role }) {
+async function getUserInfo({ userName, password, role }) {
   const whereObj = {};
   if (userName) whereObj.userName = userName;
   if (password) whereObj.password = password;
@@ -22,7 +23,7 @@ async function getUserInfo ({ userName, password, role }) {
   if (result === null) {
     return null;
   }
-  return result.dataValues;
+  return formateUser(result.dataValues);
 }
 /**
  * 数据库新增用户
@@ -34,7 +35,7 @@ async function getUserInfo ({ userName, password, role }) {
  * @param {city} city 所属城市
  * @returns
  */
-async function createUser ({ userName, password, realName, role, city }) {
+async function createUser({ userName, password, realName, role, city }) {
   const createObj = {
     userName,
     password,
@@ -51,7 +52,7 @@ async function createUser ({ userName, password, realName, role, city }) {
  * @param {Object} param1 原来的信息
  * @returns
  */
-async function updateUserInfo ({ newPassword, newCity, newLock, newRealName, newPicture }, { userName, password }) {
+async function updateUserInfo({ newPassword, newCity, newLock, newRealName, newPicture }, { userName, password }) {
   // 更新信息
   const updateObj = {};
   if (newPassword) {
@@ -81,8 +82,12 @@ async function updateUserInfo ({ newPassword, newCity, newLock, newRealName, new
   });
   return result[0] > 0;
 }
-
-async function queryAllUser ({ pageIndex, pageSize, whereObj }) {
+/**
+ * 根据指定条件查询用户
+ * @param {Object} param0 查询条件
+ * @returns
+ */
+async function queryAllUser({ pageIndex, pageSize, whereObj }) {
   whereObj.role = 2;
   const result = await User.findAndCountAll({
     limit: pageSize,
@@ -91,7 +96,8 @@ async function queryAllUser ({ pageIndex, pageSize, whereObj }) {
     where: whereObj,
   });
   const count = result.count;
-  const userList = result.rows.map(row => row.dataValues);
+  let userList = result.rows.map(row => row.dataValues);
+  userList = formateUser(userList);
   return {
     count,
     userList,
