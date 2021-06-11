@@ -70,7 +70,7 @@ async function refreshToken(ctx, next) {
 async function loginOut(ctx, next) {
   // 1.从header和cookie中分别拿到 ref 和acc
   const ref_token = ctx.cookies.get('ref_t');
-  const acc_token = ctx.header.authorization;
+  const acc_token = ctx.header.authorization.split(' ')[1];
   // 2.解析 token 获得加密值和 过期时间
   const ref_obj = getContentFromToken(ref_token);
   const acc_obj = getContentFromToken(acc_token, true);
