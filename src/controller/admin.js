@@ -103,7 +103,7 @@ async function changeInfo(ctx) {
       let { newLock } = ctx.request.body;
       newLock = +newLock;
       // 如果不是数字类型则报错
-      if (typeof newLock != 'number') {
+      if (!isFinite(newLock)) {
         ctx.status = 422;
         ctx.body = new ErrorModel(paramsInvalidInfo);
         return;
@@ -128,11 +128,12 @@ async function changeInfo(ctx) {
  */
 async function getUserList(ctx) {
   let whereObj = {};
-  const { current, city, userName } = ctx.query;
+  const { current, pageSize, city, userName, realName } = ctx.query;
   let pageIndex = current ? parseInt(current) - 1 : 0;
   if (city) whereObj.city = city;
-  if (userName) whereObj.name = userName;
-  const result = await queryAllUser({ pageIndex, pageSize: DEFAULT_PAGE_SIZE, whereObj });
+  if (userName) whereObj.userName = userName;
+  if (realName) whereObj.realName = realName;
+  const result = await queryAllUser({ pageIndex, pageSize: +pageSize, whereObj });
   ctx.body = new SuccessModel(result);
 }
 module.exports = { initAdmin, addUser, changeInfo, getUserList };
