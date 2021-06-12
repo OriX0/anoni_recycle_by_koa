@@ -11,7 +11,7 @@ const { DEFAULT_AVATAR_URL } = require('../conf/constant');
  */
 function _formateAvatarUrl(userObj) {
   if (userObj.avatar == null) {
-    userObj.avatar == DEFAULT_AVATAR_URL;
+    userObj.avatar = DEFAULT_AVATAR_URL;
   }
   return userObj;
 }
