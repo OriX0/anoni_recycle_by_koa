@@ -2,7 +2,7 @@
  * @Description: 对user表操作的 服务层
  * @Author: OriX
  * @LastEditors: OriX
- * @LastEditTime: 2021-06-11 14:28:27
+ * @LastEditTime: 2021-06-12 12:34:35
  */
 const { User } = require('../db/model/index');
 const { formateUser } = require('./_formate');
@@ -65,7 +65,7 @@ async function updateUserInfo({ newPassword, newCity, newLock, newRealName, newP
     updateObj.is_locked = newLock;
   }
   if (newRealName) {
-    updateObj.relaName = newRealName;
+    updateObj.realName = newRealName;
   }
   if (newPicture) {
     updateObj.picture = newPicture;
@@ -92,7 +92,7 @@ async function queryAllUser({ pageIndex, pageSize, whereObj }) {
   const result = await User.findAndCountAll({
     limit: pageSize,
     offset: pageIndex * pageSize,
-    attributes: ['userName', 'password', 'avatar', 'realName', 'city', 'is_locked'],
+    attributes: ['id', 'userName', 'password', 'avatar', 'realName', 'city', 'is_locked'],
     where: whereObj,
   });
   const count = result.count;
